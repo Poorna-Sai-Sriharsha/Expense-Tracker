@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme {
+  --color-brand-primary: #3b82f6;
+  --color-brand-secondary: #8b5cf6;
+  --color-dark-bg: #09090b;
+  --color-dark-card: #18181b;
+}
+
+@layer base {
+  body {
+    @apply bg-dark-bg text-slate-100 antialiased;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  }
+}
+
+@layer utilities {
+  .panel {
+    @apply bg-dark-card border border-slate-800 shadow-sm rounded-xl overflow-hidden;
+  }
+
+  .input-field {
+    @apply w-full px-3 py-2 bg-[#27272a] border border-slate-700 rounded-md focus:ring-2 focus:ring-brand-primary/50 focus:border-brand-primary outline-none transition-all text-sm text-slate-100 placeholder-slate-500;
+  }
+
+  .label-text {
+    @apply block text-sm font-medium text-slate-300 mb-1.5;
+  }
+
+  .btn-primary {
+    @apply px-4 py-2 bg-brand-primary hover:bg-brand-primary/90 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm text-sm disabled:opacity-50 disabled:cursor-not-allowed border border-blue-500/50 hover:border-blue-400;
+  }
+}

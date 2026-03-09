@@ -10,19 +10,22 @@ Perfect for personal management or developers looking to build full-featured, mo
 ## ✨ Features
   -  **Interactive Finances** – Clean, responsive tabular format for all categorized transactions.
   -  **Live Currency Conversion** – Seamlessly switch base viewing currencies utilizing the Frankfurter API with an instant refresh across all numeric views.
+  -  **Advanced Periodic Filtering** – Sort expenses gracefully by Today, This Week, This Month, This Quarter, Half Yearly, Annually, or dynamically jump back into historical specific months.
   -  **Analytical Graph Dashboard** – Beautiful, interactive React charts breaking down spending habits visually using Recharts (Pie & Bar views).
+  -  **Spending Trend Analysis** – Dedicated Line Chart that conditionally appears to visualize broad financial trends over extended periods.
+  -  **Transaction Editing** – Effortlessly correct past mistakes via a sleek, frosted-glass Modal overlay while preserving standard insertion flows.
   -  **Smart Inputs** – Dynamically converts entered foreign amounts exactly back to a base USD storage, eliminating accounting discrepancies automatically.
   -  **State Preservation** – Complete context-driven state management securely persisted to LocalStorage without complex third-party tools.
   -  **Advanced Animations & WOW Factor** – Fluid dashboard entries using Framer Motion, satisfying CountUp animations on the balance sheet, and a celebratory Confetti burst when successfully logging expenses!
   -  **Professional SaaS Aesthetics** – Implemented deeply subtle ambient lighting, crisp typography (Inter), and a structured Flex/Grid layout.
-  -  **Fully Responsive Design** – Resizes dynamically with adjusted chart diameters to look native on both desktop and mobile screens.
+  -  **Fully Responsive Design** – Resizes dynamically with adjusted chart diameters to look native on both desktop and mobile screens, featuring totally hidden scrollbars while maintaining gesture navigation.
     
 ## 🧠 How It Works
   - The app uses **Vite** as a lightning-fast build tool to serve the React application.
   - State is managed natively through a unified `ExpenseContext` to wrap the application logic efficiently.
   - The **Frankfurter API** fetches live exchange rates, allowing the user to select their desired rendering currency from a global list dynamically.
-  - The **Recharts** integration aggregates expense category numeric data into clean layout metrics.
-  - **Framer Motion** encapsulates major components to trigger staggering layout animations correctly on browser paint.
+  - The **Recharts** integration aggregates expense category numeric data into clean layout metrics, plus Line Charts for chronological trending.
+  - **Framer Motion** encapsulates major components to trigger staggering layout animations correctly on browser paint and unmounts.
     
 ## 🛠️ Built With
   - **React 18** – Core frontend UI library

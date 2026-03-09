@@ -11,7 +11,17 @@
   body {
     @apply bg-dark-bg text-slate-100 antialiased;
     font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    -ms-overflow-style: none;
+    /* IE and Edge */
+    scrollbar-width: none;
+    /* Firefox */
   }
+
+  /* Hide scrollbar for Chrome, Safari and Opera */
+  ::-webkit-scrollbar {
+    display: none;
+  }
+
 }
 
 @layer utilities {
@@ -29,5 +39,15 @@
 
   .btn-primary {
     @apply px-4 py-2 bg-brand-primary hover:bg-brand-primary/90 text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm text-sm disabled:opacity-50 disabled:cursor-not-allowed border border-blue-500/50 hover:border-blue-400;
+  }
+
+  /* Custom class purely to ensure an element has no scrollbars if body override fails */
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }

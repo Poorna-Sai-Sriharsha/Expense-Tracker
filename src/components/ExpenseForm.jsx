@@ -3,6 +3,7 @@ import { useExpenses } from '../context/ExpenseContext';
 import { Plus } from 'lucide-react';
 import { motion } from 'framer-motion';
 import confetti from 'canvas-confetti';
+
 const CATEGORIES = ['Food', 'Travel', 'Marketing', 'Utilities', 'Other'];
 
 const ExpenseForm = () => {
@@ -11,11 +12,6 @@ const ExpenseForm = () => {
     const [amount, setAmount] = useState('');
     const [category, setCategory] = useState(CATEGORIES[0]);
     const [error, setError] = useState('');
-
-    const currencySymbol = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: currency,
-    }).formatToParts(1).find(x => x.type === 'currency').value;
 
     const handleSubmit = (e) => {
         e.preventDefault();
@@ -37,7 +33,6 @@ const ExpenseForm = () => {
             category
         });
 
-        // Fire tiny confetti burst to celebrate tracking effectively!
         confetti({
             particleCount: 50,
             spread: 60,
@@ -52,13 +47,15 @@ const ExpenseForm = () => {
     };
 
     return (
-        <div className="panel p-6 border-t-[3px] border-t-brand-primary h-auto flex flex-col shadow-xl shadow-black/20 relative overflow-hidden group">
-            <div className="absolute top-0 right-0 w-32 h-32 bg-brand-primary/5 rounded-full blur-2xl group-hover:bg-brand-primary/10 transition-colors duration-500 pointer-events-none"></div>
+        <div className="panel p-6 border-t-[3px] border-t-brand-primary h-auto flex flex-col shadow-xl shadow-black/20 relative overflow-hidden group transition-colors duration-500">
+            <div className="absolute top-0 right-0 w-32 h-32 rounded-full blur-2xl transition-colors duration-500 pointer-events-none bg-brand-primary/5 group-hover:bg-brand-primary/10"></div>
 
-            <h2 className="text-lg font-bold mb-6 text-white flex items-center gap-2 relative">
-                <Plus className="text-brand-primary" size={20} />
-                New Transaction
-            </h2>
+            <div className="flex justify-between items-center mb-6 relative">
+                <h2 className="text-lg font-bold text-white flex items-center gap-2">
+                    <Plus className="text-brand-primary" size={20} />
+                    New Transaction
+                </h2>
+            </div>
 
             {error && (
                 <motion.div
@@ -77,7 +74,7 @@ const ExpenseForm = () => {
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
-                        className="input-field group-hover:border-slate-600 focus:border-brand-primary"
+                        className="input-field group-hover:border-slate-600 focus:border-brand-primary focus:ring-brand-primary/50"
                         placeholder="e.g. Monthly Server Hosting"
                     />
                 </div>
@@ -91,7 +88,7 @@ const ExpenseForm = () => {
                             min="0"
                             value={amount}
                             onChange={(e) => setAmount(e.target.value)}
-                            className="input-field group-hover:border-slate-600 focus:border-brand-primary"
+                            className="input-field group-hover:border-slate-600 focus:border-brand-primary focus:ring-brand-primary/50"
                             placeholder="0.00"
                         />
                     </div>
@@ -102,7 +99,7 @@ const ExpenseForm = () => {
                     <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
-                        className="input-field cursor-pointer appearance-none group-hover:border-slate-600 focus:border-brand-primary"
+                        className="input-field cursor-pointer appearance-none group-hover:border-slate-600 focus:border-brand-primary focus:ring-brand-primary/50"
                         style={{ backgroundImage: 'url("data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%2394a3b8%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.5-12.8z%22%2F%3E%3C%2Fsvg%3E")', backgroundRepeat: 'no-repeat', backgroundPosition: 'right 0.75rem top 50%', backgroundSize: '0.65rem auto' }}
                     >
                         {CATEGORIES.map(cat => (
@@ -115,7 +112,7 @@ const ExpenseForm = () => {
                     whileHover={{ scale: 1.02 }}
                     whileTap={{ scale: 0.98 }}
                     type="submit"
-                    className="btn-primary w-full mt-auto pt-2.5 pb-2.5 shadow-[0_4px_14px_0_rgba(59,130,246,0.39)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.23)]"
+                    className="px-4 py-2 mt-auto pt-2.5 pb-2.5 w-full text-white font-medium rounded-lg transition-colors flex items-center justify-center gap-2 shadow-sm text-sm border outline-none bg-brand-primary hover:bg-brand-primary/90 border-blue-500/50 hover:border-blue-400 shadow-[0_4px_14px_0_rgba(59,130,246,0.39)] hover:shadow-[0_6px_20px_rgba(59,130,246,0.23)]"
                 >
                     Add Expense
                 </motion.button>

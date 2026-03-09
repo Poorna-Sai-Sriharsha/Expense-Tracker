@@ -1,6 +1,6 @@
 import React from 'react';
 import { useExpenses } from '../context/ExpenseContext';
-import { Trash2, Coffee, Plane, Megaphone, Zap, CreditCard, List } from 'lucide-react';
+import { Trash2, Coffee, Plane, Megaphone, Zap, CreditCard, List, Edit2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const categoryIcons = {
@@ -20,7 +20,7 @@ const categoryColors = {
 };
 
 const ExpenseList = () => {
-    const { expenses, deleteExpense, currency, exchangeRates } = useExpenses();
+    const { filteredExpenses, setEditingExpense, deleteExpense, currency, exchangeRates } = useExpenses();
 
     const getConvertedAmount = (amount) => {
         const rate = exchangeRates[currency] || 1;
@@ -40,16 +40,16 @@ const ExpenseList = () => {
                     Recent Transactions
                 </h2>
                 <motion.span
-                    key={expenses.length}
+                    key={filteredExpenses.length}
                     initial={{ scale: 0.8, opacity: 0 }}
                     animate={{ scale: 1, opacity: 1 }}
                     className="text-xs font-semibold px-2.5 py-1 bg-slate-800 rounded-md text-slate-300 border border-slate-700"
                 >
-                    {expenses.length} Records
+                    {filteredExpenses.length} Records
                 </motion.span>
             </div>
 
-            {expenses.length === 0 ? (
+            {filteredExpenses.length === 0 ? (
                 <motion.div
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}
@@ -69,57 +69,66 @@ const ExpenseList = () => {
                         <CreditCard className="text-slate-500" size={24} />
                     </motion.div>
                     <h3 className="text-md font-medium text-white">No transactions found</h3>
-                    <p className="text-sm text-slate-400 mt-1 max-w-[200px]">Add your first expense to populate your dashboard automatically.</p>
+                    <p className="text-sm text-slate-400 mt-1 max-w-[200px]">No records align with the current filters.</p>
                 </motion.div>
             ) : (
-                <div className="flex-1 overflow-x-auto min-h-[250px] max-h-[500px] overflow-y-auto custom-scrollbar">
-                    <table className="w-full text-left text-sm whitespace-nowrap">
-                        <tbody className="divide-y divide-slate-800/80">
-                            <AnimatePresence>
-                                {expenses.map((expense) => (
-                                    <motion.tr
-                                        key={expense.id}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0, x: 20, scale: 0.95 }}
-                                        transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                                        className="hover:bg-slate-800/50 transition-colors group relative"
-                                    >
-                                        <td className="px-6 py-4">
-                                            <div className="flex items-center gap-3">
-                                                <div className={`p-2 rounded-lg border ${categoryColors[expense.category] || categoryColors['Other']}`}>
-                                                    {categoryIcons[expense.category] || categoryIcons['Other']}
-                                                </div>
-                                                <div>
-                                                    <p className="font-semibold text-white group-hover:text-brand-primary transition-colors">{expense.name}</p>
-                                                    <p className="text-xs text-slate-400 font-medium mt-0.5 group-hover:text-slate-300 transition-colors">{expense.category}</p>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="px-6 py-4 text-right">
-                                            <p className="font-bold text-white tracking-wide">
+                <div className="flex-1 overflow-y-auto min-h-[250px] max-h-[500px] custom-scrollbar overflow-x-hidden">
+                    <div className="flex flex-col divide-y divide-slate-800/80">
+                        <AnimatePresence>
+                            {filteredExpenses.map((expense) => (
+                                <motion.div
+                                    key={expense.id}
+                                    initial={{ opacity: 0, x: -20 }}
+                                    animate={{ opacity: 1, x: 0 }}
+                                    exit={{ opacity: 0, x: 20, scale: 0.95 }}
+                                    transition={{ type: "spring", stiffness: 300, damping: 25 }}
+                                    className="hover:bg-slate-800/50 transition-colors group relative p-4 sm:px-6 flex items-center justify-between gap-2"
+                                >
+                                    <div className="flex items-center gap-3 overflow-hidden flex-1">
+                                        <div className={`p-2 rounded-lg border shrink-0 ${categoryColors[expense.category] || categoryColors['Other']}`}>
+                                            {categoryIcons[expense.category] || categoryIcons['Other']}
+                                        </div>
+                                        <div className="min-w-0">
+                                            <p className="font-semibold text-white group-hover:text-brand-primary transition-colors truncate text-sm md:text-base">{expense.name}</p>
+                                            <p className="text-xs text-slate-400 font-medium mt-0.5 group-hover:text-slate-300 transition-colors truncate">
+                                                {expense.category} · {new Date(expense.date).toLocaleDateString()}
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex items-center gap-3 md:gap-4 shrink-0">
+                                        <div className="text-right flex flex-col items-end justify-center">
+                                            <p className="font-bold text-white tracking-wide text-sm md:text-base">
                                                 {currencySymbol}{getConvertedAmount(expense.amount)}
                                             </p>
                                             {currency !== 'USD' && (
-                                                <p className="text-[11px] text-slate-500 font-medium mt-0.5">
+                                                <p className="text-[10px] sm:text-[11px] text-slate-500 font-medium mt-0.5">
                                                     ${expense.amount.toFixed(2)} USD
                                                 </p>
                                             )}
-                                        </td>
-                                        <td className="px-6 py-4 w-12 text-right">
+                                        </div>
+
+                                        <div className="flex sm:flex-row justify-end gap-1 md:gap-2 border-l border-slate-700/50 pl-3">
+                                            <button
+                                                onClick={() => setEditingExpense(expense)}
+                                                className="p-1.5 text-slate-400 hover:text-brand-secondary hover:bg-brand-secondary/10 rounded-md transition-all sm:opacity-0 group-hover:opacity-100 focus:opacity-100 outline-none transform"
+                                                title="Edit expense"
+                                            >
+                                                <Edit2 size={16} />
+                                            </button>
                                             <button
                                                 onClick={() => deleteExpense(expense.id)}
-                                                className="p-1.5 text-slate-500 hover:text-red-400 hover:bg-red-500/10 rounded-md transition-colors opacity-0 group-hover:opacity-100 focus:opacity-100 outline-none hover:rotate-12 transform"
+                                                className="p-1.5 text-slate-400 hover:text-red-400 hover:bg-red-500/10 rounded-md transition-all sm:opacity-0 group-hover:opacity-100 focus:opacity-100 outline-none hover:rotate-12 transform"
                                                 title="Delete expense"
                                             >
                                                 <Trash2 size={16} />
                                             </button>
-                                        </td>
-                                    </motion.tr>
-                                ))}
-                            </AnimatePresence>
-                        </tbody>
-                    </table>
+                                        </div>
+                                    </div>
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                    </div>
                 </div>
             )}
         </div>

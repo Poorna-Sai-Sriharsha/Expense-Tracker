@@ -2,6 +2,7 @@ import React from 'react';
 import ExpenseForm from './components/ExpenseForm';
 import ExpenseList from './components/ExpenseList';
 import SummaryPanel from './components/SummaryPanel';
+import EditTransactionModal from './components/EditTransactionModal';
 import { LayoutDashboard, DollarSign } from 'lucide-react';
 import { motion } from 'framer-motion';
 
@@ -78,6 +79,9 @@ function App() {
           </motion.div>
         </motion.div>
       </main>
+
+      {/* Global Modals */}
+      <EditTransactionModal />
     </div>
   );
 }

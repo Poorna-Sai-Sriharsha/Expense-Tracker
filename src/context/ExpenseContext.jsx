@@ -25,6 +25,10 @@ export const ExpenseProvider = ({ children }) => {
     const [ratesLoading, setRatesLoading] = useState(false);
     const [ratesError, setRatesError] = useState(null);
 
+    // New Features
+    const [editingExpense, setEditingExpense] = useState(null);
+    const [selectedMonth, setSelectedMonth] = useState('All');
+
     useEffect(() => {
         localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(expenses));
     }, [expenses]);
@@ -38,9 +42,60 @@ export const ExpenseProvider = ({ children }) => {
         setExpenses(prev => [newExpense, ...prev]);
     };
 
+    const updateExpense = (id, updatedData) => {
+        setExpenses(prev => prev.map(exp => (exp.id === id ? { ...exp, ...updatedData } : exp)));
+    };
+
     const deleteExpense = (id) => {
         setExpenses(prev => prev.filter(exp => exp.id !== id));
+        if (editingExpense?.id === id) {
+            setEditingExpense(null);
+        }
     };
+
+    const filteredExpenses = expenses.filter(exp => {
+        if (selectedMonth === 'All') return true;
+        
+        const expDate = new Date(exp.date);
+        const today = new Date();
+        
+        // Reset times for accurate day comparisons
+        const expDateOnly = new Date(expDate.getFullYear(), expDate.getMonth(), expDate.getDate());
+        const todayOnly = new Date(today.getFullYear(), today.getMonth(), today.getDate());
+
+        if (selectedMonth === 'Today') {
+            return expDateOnly.getTime() === todayOnly.getTime();
+        }
+        
+        if (selectedMonth === 'This Week') {
+            const firstDayOfWeek = new Date(todayOnly);
+            firstDayOfWeek.setDate(todayOnly.getDate() - todayOnly.getDay()); // Sunday as first day
+            return expDateOnly >= firstDayOfWeek;
+        }
+
+        if (selectedMonth === 'This Month') {
+            return expDate.getFullYear() === today.getFullYear() && expDate.getMonth() === today.getMonth();
+        }
+
+        if (selectedMonth === 'This Quarter') {
+            const currentQuarter = Math.floor(today.getMonth() / 3);
+            const expQuarter = Math.floor(expDate.getMonth() / 3);
+            return expDate.getFullYear() === today.getFullYear() && expQuarter === currentQuarter;
+        }
+
+        if (selectedMonth === 'Half Yearly') {
+            const currentHalf = Math.floor(today.getMonth() / 6);
+            const expHalf = Math.floor(expDate.getMonth() / 6);
+            return expDate.getFullYear() === today.getFullYear() && expHalf === currentHalf;
+        }
+
+        if (selectedMonth === 'Annually') {
+            return expDate.getFullYear() === today.getFullYear();
+        }
+
+        // Fallback to the original YYYY-MM precise matching string in case they are looking at history
+        return exp.date.startsWith(selectedMonth);
+    });
 
     const fetchRates = async (base = 'USD') => {
         setRatesLoading(true);
@@ -67,8 +122,14 @@ export const ExpenseProvider = ({ children }) => {
 
     const value = {
         expenses,
+        filteredExpenses,
         addExpense,
+        updateExpense,
         deleteExpense,
+        editingExpense,
+        setEditingExpense,
+        selectedMonth,
+        setSelectedMonth,
         currency,
         setCurrency,
         exchangeRates,
